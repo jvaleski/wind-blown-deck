@@ -24,12 +24,12 @@ if __name__ == '__main__':
 
   prediction = get_prediction(content, cfg['automl']['project-id'],  cfg['automl']['model-id'])
 
-  twilio_client = Client(cfg['twilio']['account-sid'], cfg['twilio']['auth-token'])
+  blown = prediction.payload[0].display_name != "covered"
 
-  message = twilio_client.messages.create(
-                              from_=cfg['twilio']['from-num'],
-                              body=prediction,
-                              to=cfg['twilio']['to-num']
-                          )
+  if blown:
+    twilio_client = Client(cfg['twilio']['account-sid'], cfg['twilio']['auth-token'])
+    twilio_client.messages.create(from_=cfg['twilio']['from-num'],
+                                  body=prediction,
+                                  to=cfg['twilio']['to-num'])
 
   
