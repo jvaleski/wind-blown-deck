@@ -25,8 +25,9 @@ if __name__ == '__main__':
   prediction = get_prediction(content, cfg['automl']['project-id'],  cfg['automl']['model-id'])
 
   blown = prediction.payload[0].display_name != "covered"
-
-  if blown:
+  score = float(prediction.payload[0].classification.score)
+  
+  if blown and (score > 0.9):
     twilio_client = Client(cfg['twilio']['account-sid'], cfg['twilio']['auth-token'])
     twilio_client.messages.create(from_=cfg['twilio']['from-num'],
                                   body=prediction,
